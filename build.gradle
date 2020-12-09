@@ -1,0 +1,47 @@
+plugins {
+    id 'org.springframework.boot' version '2.4.0'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation "org.postgresql:postgresql:42.2.12"
+    implementation 'com.vladmihalcea:hibernate-types-52:2.9.11'
+
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    testCompileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    testImplementation 'io.cucumber:cucumber-java:6.0.0'
+    testImplementation 'io.cucumber:cucumber-junit:6.0.0'
+    testImplementation 'io.cucumber:cucumber-spring:6.0.0'
+    testImplementation 'net.masterthought:cucumber-reporting:4.2.3' // For reporting purposes
+
+    testImplementation 'org.dbunit:dbunit:2.6.0'
+    testImplementation 'com.github.database-rider:rider-junit5:1.18.0'
+    testImplementation 'com.github.database-rider:rider-cucumber:1.18.0'
+
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+}
+
+test {
+    useJUnitPlatform()
+}
