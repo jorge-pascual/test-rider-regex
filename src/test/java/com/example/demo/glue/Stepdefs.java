@@ -1,8 +1,10 @@
 package com.example.demo.glue;
 
 import com.example.demo.TestService;
+import com.github.database.rider.core.api.dataset.CompareOperation;
 import com.github.database.rider.core.api.dataset.DataSetExecutor;
 import com.github.database.rider.core.configuration.DataSetConfig;
+import com.github.database.rider.core.configuration.ExpectedDataSetConfig;
 import com.github.database.rider.core.connection.ConnectionHolderImpl;
 import com.github.database.rider.core.dataset.DataSetExecutorImpl;
 import io.cucumber.java.en.Given;
@@ -15,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import static com.github.database.rider.core.dsl.RiderDSL.withConnection;
 
 public class Stepdefs {
 
@@ -39,15 +43,10 @@ public class Stepdefs {
 
         Session hibernateSession = em.unwrap(Session.class);
         hibernateSession.doWork(connection -> {
-            DataSetExecutor dbunitExecutor = DataSetExecutorImpl.instance(new ConnectionHolderImpl(connection));
             try {
-                dbunitExecutor
-                    .compareCurrentDataSetWith(
-                        new DataSetConfig("database/result.yml"),
-                        new String[] {},
-                        null,
-                            new String[] {}
-                );
+                withConnection(connection)
+                        .withDataSetConfig(new DataSetConfig("database/result.yml"))
+                        .expectDataSet(new ExpectedDataSetConfig().compareOperation(CompareOperation.CONTAINS));
             } catch (DatabaseUnitException e) {
                 e.printStackTrace();
             }
